@@ -1,0 +1,38 @@
+.mzk-error-page {
+  min-height: 70dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  padding: 24px;
+
+  &__code {
+    font-size: 72px;
+    font-weight: 800;
+    color: var(--mzk-green-soft);
+    -webkit-text-stroke: 2px var(--mzk-green);
+    line-height: 1;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 26px;
+    color: var(--mzk-text);
+  }
+
+  p {
+    max-width: 460px;
+    color: var(--mzk-muted-2);
+    margin: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}

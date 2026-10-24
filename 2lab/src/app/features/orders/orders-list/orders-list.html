@@ -1,0 +1,25 @@
+<div class="orders">
+  @if (loading()) {
+    <div class="card orders-skeleton"></div>
+  } @else if (orders().length === 0) {
+    <div class="empty-state card">
+      <span class="empty-state__icon"><i class="pi pi-file"></i></span>
+      <h2>Заказов пока нет</h2>
+      <p>Оформите первый заказ — и он появится здесь вместе со статусом доставки.</p>
+      <a routerLink="/catalog" class="btn btn--primary">Перейти в каталог</a>
+    </div>
+  } @else {
+    @for (order of orders(); track order.id) {
+      <a class="order-row card" [routerLink]="['/account/orders', order.id]">
+        <span class="order-row__number">№{{ order.number }}</span>
+        <span class="order-row__date">{{ order.createdAt | ruDate }}</span>
+        <span class="status-chip" [class]="'status-chip--' + order.status">{{ statusLabel(order.status) }}</span>
+        <span class="order-row__items">
+          {{ order.items.length }} {{ order.items.length === 1 ? 'товар' : 'товаров' }}
+          · {{ order.total | rub }}
+        </span>
+        <i class="pi pi-angle-right"></i>
+      </a>
+    }
+  }
+</div>

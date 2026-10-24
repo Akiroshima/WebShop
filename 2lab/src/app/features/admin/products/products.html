@@ -1,0 +1,208 @@
+<div class="admin-toolbar">
+  <div class="admin-search">
+    <i class="pi pi-search"></i>
+    <input
+      class="mzk-input"
+      type="search"
+      placeholder="Поиск по названию или артикулу"
+      [ngModel]="search()"
+      (ngModelChange)="search.set($event)"
+      (keyup.enter)="reload()"
+    />
+  </div>
+  <button type="button" class="btn btn--primary" (click)="openCreate()">
+    <i class="pi pi-plus"></i> Добавить товар
+  </button>
+</div>
+
+<div class="admin-table-wrap card">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Артикул</th>
+        <th>Название</th>
+        <th>Категория</th>
+        <th>Бренд</th>
+        <th class="is-number">Цена</th>
+        <th class="is-number">Остаток</th>
+        <th>Статус</th>
+        <th class="is-actions"></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of products(); track product.id) {
+        <tr>
+          <td class="admin-table__sku">{{ product.sku }}</td>
+          <td class="admin-table__name">
+            {{ product.name }}
+            @if (!product.isActive) {
+              <span class="admin-chip admin-chip--off">скрыт</span>
+            }
+          </td>
+          <td>{{ product.category }}</td>
+          <td>{{ product.brand ?? '—' }}</td>
+          <td class="is-number">{{ product.price | rub }}</td>
+          <td class="is-number" [class.is-out]="product.stock === 0">{{ product.stock }}</td>
+          <td>
+            @if (product.isActive && product.stock > 0) {
+              <span class="admin-chip admin-chip--on">в продаже</span>
+            } @else if (product.stock === 0) {
+              <span class="admin-chip admin-chip--off">нет остатка</span>
+            } @else {
+              <span class="admin-chip admin-chip--off">скрыт</span>
+            }
+          </td>
+          <td class="is-actions">
+            <button type="button" class="admin-icon" aria-label="Редактировать" (click)="openEdit(product)">
+              <i class="pi pi-pencil"></i>
+            </button>
+            <button type="button" class="admin-icon is-danger" aria-label="Удалить" (click)="askDelete(product)">
+              <i class="pi pi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8" class="admin-table__empty">Ничего не найдено</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<p-dialog
+  [(visible)]="dialogVisible"
+  [header]="editingId() ? 'Редактировать товар' : 'Новый товар'"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: 'min(94vw, 640px)' }"
+>
+  <div class="product-form">
+    <div class="product-form__row product-form__row--2">
+      <label class="field">
+        <span class="field__label">Артикул</span>
+        <input
+          class="mzk-input"
+          type="text"
+          placeholder="RC-010"
+          [ngModel]="draft().sku"
+          (ngModelChange)="update('sku', $event.toUpperCase())"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </label>
+      <label class="field">
+        <span class="field__label">Категория</span>
+        <p-select
+          [options]="categories()"
+          optionLabel="name"
+          optionValue="id"
+          [ngModel]="draft().categoryId"
+          (ngModelChange)="update('categoryId', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          styleClass="admin-select"
+          placeholder="Выберите категорию"
+        />
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="field__label">Название</span>
+      <input
+        class="mzk-input"
+        type="text"
+        placeholder="Royal Canin Sterilised 37, 2 кг"
+        [ngModel]="draft().name"
+        (ngModelChange)="update('name', $event)"
+        [ngModelOptions]="{ standalone: true }"
+      />
+    </label>
+
+    <label class="field">
+      <span class="field__label">Описание</span>
+      <textarea
+        class="mzk-input"
+        rows="2"
+        placeholder="Короткое описание для карточки товара"
+        [ngModel]="draft().description"
+        (ngModelChange)="update('description', $event)"
+        [ngModelOptions]="{ standalone: true }"
+      ></textarea>
+    </label>
+
+    <div class="product-form__row product-form__row--3">
+      <label class="field">
+        <span class="field__label">Бренд</span>
+        <p-select
+          [options]="brands()"
+          optionLabel="name"
+          optionValue="id"
+          [ngModel]="draft().brandId"
+          (ngModelChange)="update('brandId', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          styleClass="admin-select"
+          placeholder="Без бренда"
+        />
+      </label>
+      <label class="field">
+        <span class="field__label">Цена, ₽</span>
+        <p-inputnumber
+          [ngModel]="draft().price"
+          (ngModelChange)="update('price', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          [min]="0"
+          [minFractionDigits]="0"
+          [maxFractionDigits]="2"
+          inputStyleClass="mzk-input"
+        />
+      </label>
+      <label class="field">
+        <span class="field__label">Остаток, шт.</span>
+        <p-inputnumber
+          [ngModel]="draft().stock"
+          (ngModelChange)="update('stock', $event)"
+          [ngModelOptions]="{ standalone: true }"
+          [min]="0"
+          [showButtons]="true"
+          inputStyleClass="mzk-input"
+        />
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="field__label">URL изображения</span>
+      <input
+        class="mzk-input"
+        type="text"
+        placeholder="assets/img/products/korm.svg"
+        [ngModel]="draft().imageUrl"
+        (ngModelChange)="update('imageUrl', $event)"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      <span class="field__hint">В демо используйте пути вида assets/img/products/*.svg</span>
+    </label>
+
+    <label class="product-form__check">
+      <p-checkbox
+        [binary]="true"
+        [ngModel]="draft().isActive"
+        (ngModelChange)="update('isActive', $event)"
+        [ngModelOptions]="{ standalone: true }"
+        inputId="is-active"
+      />
+      Активен (виден в каталоге)
+    </label>
+  </div>
+
+  <ng-template #footer>
+    <div class="product-form__footer">
+      <button type="button" class="btn btn--ghost" (click)="dialogVisible.set(false)">Отмена</button>
+      <button type="button" class="btn btn--primary" [disabled]="saving()" (click)="save()">
+        @if (saving()) {
+          <i class="pi pi-spinner pi-spin"></i> Сохраняем…
+        } @else {
+          Сохранить товар
+        }
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>
