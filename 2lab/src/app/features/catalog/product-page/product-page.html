@@ -1,0 +1,85 @@
+<div class="mzk-container">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a routerLink="/catalog">Главная</a>
+    <i class="pi pi-angle-right"></i>
+    <a routerLink="/catalog">Каталог</a>
+    @if (product(); as product) {
+      <i class="pi pi-angle-right"></i>
+      <span>{{ product.name }}</span>
+    }
+  </nav>
+
+  @if (loading()) {
+    <div class="product-skeleton card"></div>
+  } @else if (notFound()) {
+    <div class="empty-state card">
+      <span class="empty-state__icon"><i class="pi pi-box"></i></span>
+      <h2>Товар не найден</h2>
+      <p>Возможно, его успел утащить кот или ссылка устарела.</p>
+      <a routerLink="/catalog" class="btn btn--primary">Перейти в каталог</a>
+    </div>
+  } @else if (product(); as product) {
+    <div class="product-layout">
+      <div class="product-media card">
+        <img [src]="product.imageUrl" [alt]="product.name" />
+      </div>
+
+      <div class="product-info">
+        @if (product.brandId; as brandId) {
+          <a class="product-info__brand" [routerLink]="['/catalog']" [queryParams]="{ brand: brandId }">
+            {{ product.brand }}
+          </a>
+        }
+        <h1 class="product-info__name">{{ product.name }}</h1>
+        <div class="product-info__meta">
+          <span class="product-info__rating"><i class="pi pi-star-fill"></i> {{ product.rating }}</span>
+          <span class="product-info__sku">Артикул: {{ product.sku }}</span>
+        </div>
+
+        <div class="product-info__price-row">
+          <span class="product-info__price">{{ product.price | rub }}</span>
+          @if (product.stock > 0) {
+            <span class="product-info__stock is-ok"><i class="pi pi-check-circle"></i> В наличии: {{ product.stock }} шт.</span>
+          } @else {
+            <span class="product-info__stock is-out"><i class="pi pi-times-circle"></i> Нет в наличии</span>
+          }
+        </div>
+
+        <p class="product-info__desc">{{ product.description }}</p>
+
+        <div class="product-info__actions">
+          @if (product.stock > 0) {
+            <div class="qty-stepper qty-stepper--lg">
+              <button type="button" aria-label="Уменьшить" (click)="dec()">
+                <i class="pi pi-minus"></i>
+              </button>
+              <span>{{ quantity() }}</span>
+              <button type="button" aria-label="Увеличить" (click)="inc()">
+                <i class="pi pi-plus"></i>
+              </button>
+            </div>
+            <button type="button" class="btn btn--primary" (click)="addToCart()">
+              <i class="pi pi-shopping-cart"></i> Добавить в корзину
+            </button>
+          } @else {
+            <button type="button" class="btn btn--ghost" disabled>Нет в наличии</button>
+          }
+        </div>
+
+        @if (inCartQty() > 0) {
+          <div class="product-info__in-cart">
+            <i class="pi pi-check-circle"></i>
+            Уже в корзине: {{ inCartQty() }} шт.
+            <a routerLink="/cart">Перейти в корзину</a>
+          </div>
+        }
+
+        <div class="product-info__benefits">
+          <span><i class="pi pi-truck"></i> Доставка завтра от 290 ₽</span>
+          <span><i class="pi pi-shield"></i> Оригинальный товар</span>
+          <span><i class="pi pi-undo"></i> Возврат 14 дней</span>
+        </div>
+      </div>
+    </div>
+  }
+</div>
