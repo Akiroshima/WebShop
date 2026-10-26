@@ -1,0 +1,68 @@
+.recovery-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: var(--mzk-bg);
+  border-radius: 14px;
+  padding: 6px;
+  margin-top: 24px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    padding: 11px 12px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--mzk-muted-2);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &.is-active {
+      background: #fff;
+      color: var(--mzk-green);
+      box-shadow: 0 2px 10px rgba(43, 43, 38, 0.08);
+    }
+  }
+}
+
+.recovery-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+
+  &__banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5e3de;
+    color: var(--mzk-danger);
+    border: 1px solid rgba(179, 85, 63, 0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  &__hint {
+    margin: 0;
+    font-size: 12px;
+    color: var(--mzk-muted);
+    text-align: center;
+  }
+
+  &__aside {
+    text-align: center;
+    font-size: 14px;
+    color: var(--mzk-muted-2);
+
+    a {
+      font-weight: 700;
+    }
+  }
+}
