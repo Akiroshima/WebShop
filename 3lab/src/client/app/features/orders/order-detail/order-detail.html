@@ -1,0 +1,95 @@
+<nav class="breadcrumbs" aria-label="Хлебные крошки">
+  <a routerLink="/account">Личный кабинет</a>
+  <i class="pi pi-angle-right"></i>
+  <a routerLink="/account/orders">Мои заказы</a>
+  <i class="pi pi-angle-right"></i>
+  <span>Заказ №{{ order()?.number }}</span>
+</nav>
+
+@if (loading()) {
+  <div class="card detail-skeleton"></div>
+} @else if (order(); as order) {
+  <div class="detail-head">
+    <h1>Заказ №{{ order.number }}</h1>
+    <span>от {{ order.createdAt | ruDate }}</span>
+    <span class="status-chip" [class]="'status-chip--' + order.status">{{ statusLabel() }}</span>
+  </div>
+
+  <div class="detail-layout">
+    <section class="card detail-card">
+      <h2>Состав заказа</h2>
+      <ul class="detail-items">
+        @for (item of order.items; track item.sku) {
+          <li>
+            @if (item.productId) {
+              <a [routerLink]="['/products', item.productId]">{{ item.name }}</a>
+            } @else {
+              <span>{{ item.name }}</span>
+            }
+            <span class="detail-items__sku">Артикул {{ item.sku }}</span>
+            <span class="detail-items__qty">{{ item.quantity }} шт. × {{ item.price | rub }}</span>
+            <span class="detail-items__sum">{{ item.price * item.quantity | rub }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section class="card detail-card">
+      <h2>Доставка и оплата</h2>
+      <dl class="detail-rows">
+        <div>
+          <dt>Получатель</dt>
+          <dd>{{ order.recipientName }}, {{ order.recipientPhone }}</dd>
+        </div>
+        <div>
+          <dt>Адрес</dt>
+          <dd>{{ addressLine() }}</dd>
+        </div>
+        <div>
+          <dt>Доставка</dt>
+          <dd>{{ order.deliveryMethod === 'courier' ? 'Курьером' : 'Пункт выдачи' }}</dd>
+        </div>
+        <div>
+          <dt>Оплата</dt>
+          <dd>Картой онлайн (демо)</dd>
+        </div>
+        @if (order.comment) {
+          <div>
+            <dt>Комментарий</dt>
+            <dd>{{ order.comment }}</dd>
+          </div>
+        }
+      </dl>
+    </section>
+
+    <section class="card detail-card detail-card--totals">
+      <h2>Итоги</h2>
+      <dl class="detail-rows">
+        <div>
+          <dt>Товары</dt>
+          <dd>{{ order.subtotal | rub }}</dd>
+        </div>
+        @if (order.discount > 0) {
+          <div>
+            <dt>Скидка {{ order.promoCode ? '· ' + order.promoCode : '' }}</dt>
+            <dd class="is-discount">−{{ order.discount | rub }}</dd>
+          </div>
+        }
+        <div>
+          <dt>Доставка</dt>
+          <dd>{{ order.delivery | rub }}</dd>
+        </div>
+        <div class="detail-rows__total">
+          <dt>Итого</dt>
+          <dd>{{ order.total | rub }}</dd>
+        </div>
+      </dl>
+    </section>
+  </div>
+} @else {
+  <div class="empty-state card">
+    <span class="empty-state__icon"><i class="pi pi-file"></i></span>
+    <h2>Заказ не найден</h2>
+    <a routerLink="/account/orders" class="btn btn--primary">К моим заказам</a>
+  </div>
+}

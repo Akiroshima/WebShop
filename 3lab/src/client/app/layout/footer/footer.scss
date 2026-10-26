@@ -1,0 +1,72 @@
+@use '../../../styles/mixins' as m;
+
+:host {
+  display: block;
+}
+
+.mzk-footer {
+  background: var(--mzk-green-soft);
+  border-top: 1px solid var(--mzk-border);
+  padding: 32px 0 24px;
+
+  &__benefits {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  &__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--mzk-border);
+    color: var(--mzk-muted);
+    font-size: 13px;
+  }
+
+  &__dot {
+    color: var(--mzk-orange);
+  }
+}
+
+.mzk-benefit {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid var(--mzk-border);
+    display: grid;
+    place-items: center;
+    color: var(--mzk-green);
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    color: var(--mzk-muted-2);
+
+    strong {
+      color: var(--mzk-text);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+  }
+}
+
+@include m.mobile {
+  .mzk-footer__benefits {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

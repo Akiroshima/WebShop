@@ -1,0 +1,73 @@
+<section class="card security-card">
+  <h2>Смена пароля</h2>
+  <p class="security-card__note">
+    После смены пароля текущая сессия сохранится, но входить нужно будет с новым паролем.
+  </p>
+
+  @if (serverError()) {
+    <div class="security-card__banner" role="alert">
+      <i class="pi pi-exclamation-circle"></i> {{ serverError() }}
+    </div>
+  }
+
+  <form class="security-form" [formGroup]="form" (submit)="submit()">
+    <label class="field">
+      <span class="field__label">Текущий пароль</span>
+      <input
+        class="mzk-input"
+        type="password"
+        formControlName="currentPassword"
+        autocomplete="current-password"
+        placeholder="••••••••"
+        [class.is-invalid]="form.controls.currentPassword.touched && form.controls.currentPassword.invalid"
+      />
+      @if (form.controls.currentPassword.touched && form.controls.currentPassword.invalid) {
+        <span class="field__error">Введите текущий пароль</span>
+      }
+    </label>
+
+    <label class="field">
+      <span class="field__label">Новый пароль</span>
+      <input
+        class="mzk-input"
+        type="password"
+        formControlName="password"
+        autocomplete="new-password"
+        placeholder="Минимум 8 символов"
+        [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+      />
+    </label>
+
+    <label class="field">
+      <span class="field__label">Повторите новый пароль</span>
+      <input
+        class="mzk-input"
+        type="password"
+        formControlName="confirm"
+        autocomplete="new-password"
+        placeholder="Ещё раз"
+        [class.is-invalid]="form.controls.confirm.touched && form.hasError('fieldsMismatch')"
+      />
+      @if (form.controls.confirm.touched && form.hasError('fieldsMismatch')) {
+        <span class="field__error">Пароли не совпадают</span>
+      }
+    </label>
+
+    <ul class="security-rules">
+      @for (rule of rules(); track rule.key) {
+        <li [class.is-passed]="rule.passed">
+          <i class="pi" [class.pi-check-circle]="rule.passed" [class.pi-circle]="!rule.passed"></i>
+          {{ rule.label }}
+        </li>
+      }
+    </ul>
+
+    <button class="btn btn--primary" type="submit" [disabled]="saving()">
+      @if (saving()) {
+        <i class="pi pi-spinner pi-spin"></i> Сохраняем…
+      } @else {
+        Изменить пароль
+      }
+    </button>
+  </form>
+</section>
