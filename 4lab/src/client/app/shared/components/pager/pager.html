@@ -1,0 +1,28 @@
+@if (totalPages() > 0) {
+  <div class="mzk-pager">
+    <span class="mzk-pager__info">{{ range() }}</span>
+    @if (totalPages() > 1) {
+      <div class="mzk-pager__pages">
+        <button
+          type="button"
+          [disabled]="page() <= 1"
+          (click)="go(page() - 1)"
+          aria-label="Предыдущая страница"
+        >
+          <i class="pi pi-angle-left"></i>
+        </button>
+        @for (p of pages(); track p) {
+          <button type="button" [class.is-active]="p === page()" (click)="go(p)">{{ p }}</button>
+        }
+        <button
+          type="button"
+          [disabled]="page() >= totalPages()"
+          (click)="go(page() + 1)"
+          aria-label="Следующая страница"
+        >
+          <i class="pi pi-angle-right"></i>
+        </button>
+      </div>
+    }
+  </div>
+}

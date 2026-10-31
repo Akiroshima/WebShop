@@ -1,0 +1,78 @@
+<app-auth-card
+  overline="ЗООМАГАЗИН МУРКЕТ"
+  title="Вход"
+  subtitle="Войдите, чтобы заказать корм, игрушки и всё самое нужное для вашего кота."
+>
+  <form class="login-form" [formGroup]="form" (submit)="submit()">
+    @if (serverError()) {
+      <div class="login-form__banner" role="alert">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>{{ serverError() }}</span>
+        <button type="button" aria-label="Закрыть" (click)="serverError.set('')">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+    }
+
+    <label class="field">
+      <span class="field__label">Логин или email</span>
+      <input
+        class="mzk-input"
+        type="text"
+        formControlName="login"
+        placeholder="customer"
+        autocomplete="username"
+        [class.is-invalid]="form.controls.login.touched && form.controls.login.invalid"
+      />
+      @if (form.controls.login.touched && form.controls.login.invalid) {
+        <span class="field__error">Введите логин или email</span>
+      }
+    </label>
+
+    <label class="field">
+      <span class="field__label">Пароль</span>
+      <span class="login-form__password">
+        <input
+          class="mzk-input"
+          [type]="showPassword() ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          [class.is-invalid]="form.controls.password.touched && form.controls.password.invalid"
+        />
+        <button
+          type="button"
+          aria-label="Показать пароль"
+          (click)="showPassword.set(!showPassword())"
+        >
+          <i class="pi" [class.pi-eye]="!showPassword()" [class.pi-eye-slash]="showPassword()"></i>
+        </button>
+      </span>
+      @if (form.controls.password.touched && form.controls.password.invalid) {
+        <span class="field__error">Введите пароль</span>
+      }
+    </label>
+
+    <div class="login-form__aside">
+      <a routerLink="/recovery">Забыли пароль?</a>
+    </div>
+
+    <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting()">
+      @if (submitting()) {
+        <i class="pi pi-spinner pi-spin"></i> Входим…
+      } @else {
+        Войти <i class="pi pi-arrow-right"></i>
+      }
+    </button>
+
+    <div class="login-form__demo">
+      <span class="login-form__demo-title">Демо-доступы</span>
+      <code>customer / customer123</code> — покупатель Анна Смирнова
+      <code>admin / admin123</code> — администратор магазина
+    </div>
+  </form>
+
+  <div panel class="login-panel-extra">
+    <p>В демо-версии письмо с кодом восстановления выводится в консоль браузера — SMTP не нужен.</p>
+  </div>
+</app-auth-card>

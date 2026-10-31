@@ -1,0 +1,80 @@
+<div class="mzk-topbar">
+  <div class="mzk-container mzk-topbar__inner">
+    <span class="mzk-topbar__item"><i class="pi pi-map-marker"></i> Москва</span>
+    <span class="mzk-topbar__item mzk-topbar__item--center">Всё для счастливого кота. Доставка от 290 ₽</span>
+    <a class="mzk-topbar__item mzk-topbar__item--phone" href="tel:88006002727">8 800 600-27-27 · 9:00–21:00</a>
+  </div>
+</div>
+
+<header class="mzk-header">
+  <div class="mzk-container mzk-header__inner">
+    <a routerLink="/catalog" class="mzk-logo" aria-label="Муркет — на главную">
+      <span class="mzk-logo__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <path d="M6 14 L6 6 L12 10.5 M26 14 L26 6 L20 10.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="13" cy="17" r="1.8" fill="#fff"/>
+          <circle cx="19" cy="17" r="1.8" fill="#fff"/>
+          <path d="M14.5 21 Q16 22.4 17.5 21" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="mzk-logo__text">
+        <strong>МУРКЕТ</strong>
+        <small>зоомагазин для котов</small>
+      </span>
+    </a>
+
+    <form class="mzk-search" role="search" (submit)="submitSearch($event)">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <input
+        type="search"
+        name="search"
+        placeholder="Найти корм, игрушки, наполнитель…"
+        aria-label="Поиск по каталогу"
+        [ngModel]="searchValue()"
+        (ngModelChange)="searchValue.set($event)"
+      />
+      <button type="submit" class="mzk-search__btn" aria-label="Найти">
+        <i class="pi pi-arrow-right" aria-hidden="true"></i>
+      </button>
+    </form>
+
+    <div class="mzk-header__actions">
+      @if (auth.user(); as user) {
+        <div class="mzk-account">
+          <button type="button" class="mzk-icon-btn mzk-account__btn" (click)="toggleMenu()" aria-haspopup="menu">
+            <i class="pi pi-user" aria-hidden="true"></i>
+            <span class="mzk-account__name">{{ user.fullName }}</span>
+          </button>
+          @if (menuOpen()) {
+            <div class="mzk-account__menu" role="menu">
+              <span class="mzk-account__who">{{ user.fullName }}<small>{{ user.email }}</small></span>
+              <a role="menuitem" routerLink="/account">Личный кабинет</a>
+              @if (user.role === 'admin') {
+                <a role="menuitem" routerLink="/admin/products">Управление</a>
+              }
+              <button type="button" role="menuitem" (click)="logout()">Выйти из аккаунта</button>
+            </div>
+          }
+        </div>
+      }
+      <a routerLink="/cart" class="mzk-icon-btn" aria-label="Корзина">
+        <i class="pi pi-shopping-cart" aria-hidden="true"></i>
+        @if (cart.badgeCount() > 0) {
+          <span class="mzk-cart-badge">{{ cart.badgeCount() }}</span>
+        }
+      </a>
+    </div>
+  </div>
+
+  <nav class="mzk-nav" aria-label="Разделы каталога">
+    <div class="mzk-container mzk-nav__inner">
+      @for (link of navLinks; track link.label) {
+        <a
+          [routerLink]="['/catalog']"
+          [queryParams]="link.categoryId ? { category: link.categoryId } : null"
+          routerLinkActive="is-active"
+        >{{ link.label }}</a>
+      }
+    </div>
+  </nav>
+</header>

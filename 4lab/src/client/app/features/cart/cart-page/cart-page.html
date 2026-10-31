@@ -1,0 +1,107 @@
+<div class="mzk-container">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a routerLink="/catalog">Главная</a>
+    <i class="pi pi-angle-right"></i>
+    <span>Корзина</span>
+  </nav>
+
+  <div class="page-head">
+    <h1>Корзина</h1>
+  </div>
+
+  @if (cart.cart(); as cartState) {
+    @if (cartState.items.length === 0) {
+      <div class="empty-state card">
+        <span class="empty-state__icon"><i class="pi pi-shopping-cart"></i></span>
+        <h2>Корзина пуста</h2>
+        <p>Самое время побаловать кота — в каталоге корм, игрушки и уютные лежанки.</p>
+        <a routerLink="/catalog" class="btn btn--primary">Перейти в каталог</a>
+      </div>
+    } @else {
+      <div class="cart-layout">
+        <section class="cart-items">
+          @for (item of cartState.items; track item.productId) {
+            <article class="cart-item card" [class.is-busy]="busy() === item.productId">
+              <a class="cart-item__media" [routerLink]="['/products', item.productId]">
+                <img [src]="item.imageUrl" [alt]="item.name" loading="lazy" />
+              </a>
+              <div class="cart-item__info">
+                @if (item.brand; as brand) {
+                  <span class="cart-item__brand">{{ brand }}</span>
+                }
+                <a class="cart-item__name" [routerLink]="['/products', item.productId]">{{ item.name }}</a>
+                <span class="cart-item__stock"><i class="pi pi-check-circle"></i> В наличии · готов к отправке</span>
+              </div>
+              <div class="cart-item__qty">
+                <div class="qty-stepper">
+                  <button type="button" aria-label="Уменьшить" (click)="changeQty(item, -1)">
+                    <i class="pi pi-minus"></i>
+                  </button>
+                  <span>{{ item.quantity }}</span>
+                  <button
+                    type="button"
+                    aria-label="Увеличить"
+                    [disabled]="item.quantity >= item.stock"
+                    (click)="changeQty(item, 1)"
+                  >
+                    <i class="pi pi-plus"></i>
+                  </button>
+                </div>
+                <span class="cart-item__unit">{{ item.price | rub }} / шт.</span>
+              </div>
+              <div class="cart-item__sum">
+                <strong>{{ item.subtotal | rub }}</strong>
+              </div>
+              <button type="button" class="cart-item__remove" aria-label="Удалить товар" (click)="remove(item)">
+                <i class="pi pi-trash"></i>
+              </button>
+            </article>
+          }
+
+          <a routerLink="/catalog" class="cart-back">
+            <i class="pi pi-arrow-left"></i> Вернуться в каталог
+          </a>
+        </section>
+
+        <aside class="cart-summary card">
+          <h2>Ваша корзина</h2>
+          <dl class="cart-summary__rows">
+            <div>
+              <dt>Товары, {{ cartState.itemsCount }} шт.</dt>
+              <dd>{{ cartState.subtotal | rub }}</dd>
+            </div>
+            @if (cartState.promo; as promo) {
+              <div class="is-promo">
+                <dt>Промокод {{ promo.code }}</dt>
+                <dd>−{{ cartState.discount | rub }}</dd>
+              </div>
+            }
+            <div>
+              <dt>Доставка курьером</dt>
+              <dd>290 ₽</dd>
+            </div>
+          </dl>
+          <div class="cart-summary__total">
+            <span>Итого</span>
+            <strong>{{ cartState.total + 290 | rub }}</strong>
+          </div>
+          <a routerLink="/checkout" class="btn btn--primary btn--block">
+            Перейти к оформлению <i class="pi pi-arrow-right"></i>
+          </a>
+          <p class="cart-summary__promo-hint">
+            @if (cartState.promo; as promo) {
+              Промокод {{ promo.code }} применён — скидка уже учтена.
+            } @else {
+              Промокод можно применить на следующем шаге
+            }
+          </p>
+          <div class="cart-summary__banner">
+            <span class="cart-summary__banner-code">МУР10</span>
+            <span>−10 % на заказ от 1 000 ₽</span>
+          </div>
+          <p class="cart-summary__secure"><i class="pi pi-lock"></i> Безопасная оплата — демо-режим без списаний</p>
+        </aside>
+      </div>
+    }
+  }
+</div>
