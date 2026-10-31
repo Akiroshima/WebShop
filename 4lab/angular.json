@@ -1,0 +1,124 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "npm",
+    "analytics": false
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "murket": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src/client",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/client/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/client/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/client/assets"
+              }
+            ],
+            "styles": [
+              "node_modules/@fontsource/nunito/400.css",
+              "node_modules/@fontsource/nunito/600.css",
+              "node_modules/@fontsource/nunito/700.css",
+              "node_modules/@fontsource/nunito/800.css",
+              "node_modules/primeicons/primeicons.css",
+              "src/client/styles.scss"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "12kB",
+                  "maximumError": "24kB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "options": {
+            "proxyConfig": "src/client/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "murket:build:production"
+            },
+            "development": {
+              "buildTarget": "murket:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular/build:extract-i18n"
+        },
+        "test": {
+          "builder": "@angular/build:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/client/public"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/client/assets"
+              }
+            ],
+            "styles": [
+              "node_modules/@fontsource/nunito/400.css",
+              "node_modules/@fontsource/nunito/600.css",
+              "node_modules/@fontsource/nunito/700.css",
+              "node_modules/@fontsource/nunito/800.css",
+              "node_modules/primeicons/primeicons.css",
+              "src/client/styles.scss"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

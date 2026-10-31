@@ -1,0 +1,134 @@
+@use '../../../../styles/mixins' as m;
+
+:host {
+  display: block;
+  padding-bottom: 32px;
+}
+
+.account-greet {
+  margin: -8px 0 20px;
+  color: var(--mzk-muted-2);
+}
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.account-side {
+  position: sticky;
+  top: 150px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 8px 14px;
+    border-bottom: 1px solid var(--mzk-border);
+  }
+
+  &__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--mzk-green);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    font-weight: 800;
+    font-size: 15px;
+  }
+
+  &__menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    a,
+    button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--mzk-text);
+      text-decoration: none;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+
+      i {
+        color: var(--mzk-muted);
+        font-size: 15px;
+      }
+
+      &:hover {
+        background: var(--mzk-bg);
+      }
+    }
+
+    a.is-active {
+      background: var(--mzk-green-soft);
+      color: var(--mzk-green);
+
+      i {
+        color: var(--mzk-green);
+      }
+    }
+  }
+
+  &__logout {
+    margin-top: 6px;
+    color: var(--mzk-danger) !important;
+
+    i {
+      color: var(--mzk-danger) !important;
+    }
+
+    &:hover {
+      background: #f5e3de !important;
+    }
+  }
+}
+
+@include m.mobile {
+  .account-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .account-side {
+    position: static;
+  }
+
+  .account-side__menu {
+    flex-direction: row;
+    overflow-x: auto;
+
+    a,
+    button {
+      white-space: nowrap;
+    }
+  }
+
+  .account-side__user {
+    border-bottom: none;
+    padding-bottom: 4px;
+  }
+}
