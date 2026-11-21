@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Инфраструктура персистентности синхронизирует ShoppingCart.PromoId (internal) с FK carts.promo_id. -->
+    <InternalsVisibleTo Include="MurketApi.Infrastructure" />
+    <InternalsVisibleTo Include="MurketApi.Tests" />
+  </ItemGroup>
+
+</Project>

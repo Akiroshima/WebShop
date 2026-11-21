@@ -1,0 +1,47 @@
+.mzk-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+
+  &__info {
+    font-size: 14px;
+    color: var(--mzk-muted);
+  }
+
+  &__pages {
+    display: flex;
+    gap: 6px;
+
+    button {
+      min-width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--mzk-border-2);
+      background: #fff;
+      color: var(--mzk-text);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+
+      &:hover:not(:disabled) {
+        border-color: var(--mzk-green);
+      }
+
+      &.is-active {
+        background: var(--mzk-green);
+        border-color: var(--mzk-green);
+        color: #fff;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+    }
+  }
+}

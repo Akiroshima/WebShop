@@ -1,0 +1,64 @@
+<app-auth-card
+  [overline]="isEmail ? 'ПРОВЕРЬТЕ ПОЧТУ' : 'ПРОВЕРЬТЕ ТЕЛЕФОН'"
+  title="Мы отправили код"
+>
+  <div class="sent-icon" aria-hidden="true">
+    <i class="pi" [class.pi-envelope]="isEmail" [class.pi-mobile]="!isEmail"></i>
+  </div>
+  <p class="sent-text">
+    Введите шестизначный код, который мы отправили на
+    <strong>{{ pending.maskedContact }}</strong>. Код действует 10 минут.
+  </p>
+
+  <div class="sent-steps">
+    <span class="is-done"><i class="pi pi-check"></i> Контакты указаны</span>
+    <i class="pi pi-angle-right"></i>
+    <span class="is-current">Введите код</span>
+    <i class="pi pi-angle-right"></i>
+    <span>Новый пароль</span>
+  </div>
+
+  <form class="sent-form" (submit)="confirm($event)">
+    @if (serverError()) {
+      <div class="sent-form__banner" role="alert">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>{{ serverError() }}</span>
+      </div>
+    }
+
+    <label class="field">
+      <span class="field__label">Код из {{ isEmail ? 'письма' : 'SMS' }}</span>
+      <input
+        class="mzk-input sent-form__code"
+        type="text"
+        inputmode="numeric"
+        autocomplete="one-time-code"
+        maxlength="6"
+        placeholder="000000"
+        [ngModel]="code()"
+        (ngModelChange)="code.set($event)"
+        [class.is-invalid]="serverError()"
+      />
+      <span class="field__hint">Демо-режим: код дублируется в консоль браузера (F12 → Console)</span>
+    </label>
+
+    <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting() || !codeValid()">
+      @if (submitting()) {
+        <i class="pi pi-spinner pi-spin"></i> Проверяем…
+      } @else {
+        Подтвердить код <i class="pi pi-arrow-right"></i>
+      }
+    </button>
+
+    <div class="sent-form__row">
+      <button type="button" class="btn btn--ghost btn--sm" [disabled]="resendIn() > 0" (click)="resend()">
+        @if (resendIn() > 0) {
+          Отправить повторно через {{ resendIn() }} с
+        } @else {
+          Отправить повторно
+        }
+      </button>
+      <a routerLink="/recovery" class="btn btn--ghost btn--sm">Изменить контакт</a>
+    </div>
+  </form>
+</app-auth-card>

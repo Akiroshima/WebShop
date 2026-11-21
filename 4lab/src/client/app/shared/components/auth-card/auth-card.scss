@@ -1,0 +1,129 @@
+@use '../../../../styles/mixins' as m;
+
+:host {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: 24px;
+  background:
+    radial-gradient(900px 500px at 85% -10%, rgba(224, 123, 57, 0.14), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgba(90, 112, 82, 0.18), transparent 55%),
+    var(--mzk-bg);
+}
+
+.auth-card {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) minmax(320px, 440px);
+  width: min(860px, 100%);
+  background: #fff;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(43, 43, 38, 0.16);
+
+  &__panel {
+    position: relative;
+    background: linear-gradient(160deg, #446643 0%, #3d5a3c 55%, #324932 100%);
+    color: #fff;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    strong {
+      font-size: 18px;
+      letter-spacing: 0.08em;
+    }
+  }
+
+  &__mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.16);
+    display: grid;
+    place-items: center;
+
+    svg {
+      width: 26px;
+      height: 26px;
+    }
+  }
+
+  &__slogan {
+    margin-top: 40px;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+
+  &__note {
+    margin: 10px 0 0;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 14px;
+  }
+
+  &__cat {
+    margin-top: auto;
+    padding-top: 20px;
+
+    svg {
+      width: 180px;
+      max-width: 100%;
+    }
+  }
+
+  &__content {
+    padding: 40px 40px 36px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__overline {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    color: var(--mzk-orange);
+  }
+
+  &__title {
+    margin-top: 8px;
+    font-size: 28px;
+  }
+
+  &__subtitle {
+    margin: 10px 0 0;
+    color: var(--mzk-muted-2);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+
+@include m.mobile {
+  .auth-card {
+    grid-template-columns: 1fr;
+
+    &__panel {
+      padding: 24px;
+      min-height: 150px;
+    }
+
+    &__slogan {
+      margin-top: 16px;
+      font-size: 22px;
+    }
+
+    &__cat {
+      display: none;
+    }
+
+    &__content {
+      padding: 24px 20px 28px;
+    }
+  }
+}

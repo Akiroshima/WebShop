@@ -1,0 +1,225 @@
+<div class="mzk-container">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a routerLink="/catalog">Главная</a>
+    <i class="pi pi-angle-right"></i>
+    <a routerLink="/cart">Корзина</a>
+    <i class="pi pi-angle-right"></i>
+    <span>Оформление заказа</span>
+  </nav>
+
+  <div class="page-head">
+    <h1>Оформление заказа</h1>
+  </div>
+
+  @if (cartState(); as cartState) {
+    @if (cartState.items.length === 0) {
+      <div class="empty-state card">
+        <span class="empty-state__icon"><i class="pi pi-shopping-cart"></i></span>
+        <h2>Корзина пуста</h2>
+        <p>Сначала добавьте товары в корзину — потом оформим заказ.</p>
+        <a routerLink="/catalog" class="btn btn--primary">Перейти в каталог</a>
+      </div>
+    } @else {
+      <div class="info-bar">
+        <i class="pi pi-sparkles"></i>
+        {{ form.controls.recipientName.value || 'Анна' }}, мы заполнили данные из вашего личного кабинета — проверьте их.
+      </div>
+
+      <div class="checkout-layout">
+        <form class="checkout-form" [formGroup]="form" (submit)="submit()">
+          <section class="card checkout-section">
+            <h2><span class="checkout-step">1</span> Получатель</h2>
+            <div class="checkout-grid">
+              <label class="field">
+                <span class="field__label">Имя и фамилия</span>
+                <input class="mzk-input" formControlName="recipientName" placeholder="Анна Смирнова"
+                  [class.is-invalid]="form.controls.recipientName.touched && form.controls.recipientName.invalid" />
+                @if (form.controls.recipientName.touched && form.controls.recipientName.invalid) {
+                  <span class="field__error">Укажите имя получателя</span>
+                }
+              </label>
+              <label class="field">
+                <span class="field__label">Номер телефона</span>
+                <p-inputmask
+                  styleClass="mzk-input"
+                  formControlName="recipientPhone"
+                  mask="+7 (999) 999-99-99"
+                  placeholder="+7 (999) 123-45-67"
+                  [class.is-invalid]="form.controls.recipientPhone.touched && form.controls.recipientPhone.invalid"
+                />
+                @if (form.controls.recipientPhone.touched && form.controls.recipientPhone.invalid) {
+                  <span class="field__error">Введите корректный номер телефона</span>
+                }
+              </label>
+              <label class="field">
+                <span class="field__label">Электронная почта</span>
+                <input class="mzk-input" formControlName="recipientEmail" type="email" placeholder="anna@example.com"
+                  [class.is-invalid]="form.controls.recipientEmail.touched && form.controls.recipientEmail.invalid" />
+                @if (form.controls.recipientEmail.touched && form.controls.recipientEmail.invalid) {
+                  <span class="field__error">Введите корректный email</span>
+                }
+              </label>
+            </div>
+          </section>
+
+          <section class="card checkout-section">
+            <h2><span class="checkout-step">2</span> Способ и адрес доставки</h2>
+            <div class="checkout-delivery">
+              @for (option of deliveryOptions; track option.value) {
+                <button
+                  type="button"
+                  class="checkout-delivery__option"
+                  [class.is-active]="deliveryMethod() === option.value"
+                  (click)="setDelivery(option.value)"
+                >
+                  <span class="checkout-delivery__radio"></span>
+                  <span class="checkout-delivery__name">{{ option.label }}</span>
+                  <span class="checkout-delivery__desc">{{ option.description }}</span>
+                  <span class="checkout-delivery__price">{{ option.price | rub }}</span>
+                </button>
+              }
+            </div>
+
+            <div class="checkout-grid">
+              <label class="field">
+                <span class="field__label">Город</span>
+                <input class="mzk-input" formControlName="city" placeholder="Москва"
+                  [class.is-invalid]="form.controls.city.touched && form.controls.city.invalid" />
+                @if (form.controls.city.touched && form.controls.city.invalid) {
+                  <span class="field__error">Укажите город</span>
+                }
+              </label>
+              <label class="field">
+                <span class="field__label">Индекс</span>
+                <input class="mzk-input" formControlName="postalCode" placeholder="125047" />
+              </label>
+              <label class="field">
+                <span class="field__label">Улица и дом</span>
+                <input class="mzk-input" formControlName="street" placeholder="ул. Лесная, д. 7"
+                  [class.is-invalid]="form.controls.street.touched && form.controls.street.invalid" />
+                @if (form.controls.street.touched && form.controls.street.invalid) {
+                  <span class="field__error">Укажите улицу и дом</span>
+                }
+              </label>
+              <label class="field">
+                <span class="field__label">Квартира</span>
+                <input class="mzk-input" formControlName="apartment" placeholder="24" />
+              </label>
+              <label class="field">
+                <span class="field__label">Подъезд</span>
+                <input class="mzk-input" formControlName="entrance" placeholder="2" />
+              </label>
+              <label class="field">
+                <span class="field__label">Этаж</span>
+                <input class="mzk-input" formControlName="floor" placeholder="5" />
+              </label>
+              <label class="field">
+                <span class="field__label">Домофон</span>
+                <input class="mzk-input" formControlName="intercom" placeholder="24" />
+              </label>
+            </div>
+
+            <label class="checkout-check">
+              <p-checkbox [binary]="true" [ngModel]="savingAddress()" (ngModelChange)="savingAddress.set($event)" [ngModelOptions]="{ standalone: true }" inputId="save-address" />
+              Сохранить этот адрес в личном кабинете
+            </label>
+          </section>
+
+          <section class="card checkout-section">
+            <h2><span class="checkout-step">3</span> Оплата</h2>
+            <div class="checkout-payment">
+              <span class="checkout-payment__option is-active">
+                <i class="pi pi-credit-card"></i>
+                <span>
+                  <strong>Картой онлайн</strong>
+                  <small>Демо-режим: реальная оплата не проводится</small>
+                </span>
+              </span>
+            </div>
+            <label class="field">
+              <span class="field__label">Комментарий к заказу</span>
+              <textarea class="mzk-input" formControlName="comment" rows="2" placeholder="Например: позвонить за час до доставки"></textarea>
+            </label>
+          </section>
+        </form>
+
+        <aside class="checkout-aside">
+          <div class="card checkout-promo">
+            <h3>Промокод</h3>
+            @if (cartState.promo; as promo) {
+              <div class="checkout-promo__applied">
+                <span>
+                  <strong>{{ promo.code }}</strong>
+                  <small>{{ promo.type === 'percent' ? 'скидка ' + promo.value + ' %' : 'фиксированная скидка' }}</small>
+                </span>
+                <span class="checkout-promo__discount">−{{ cartState.discount | rub }}</span>
+                <button type="button" aria-label="Убрать промокод" (click)="removePromo()">
+                  <i class="pi pi-times"></i>
+                </button>
+              </div>
+            } @else {
+              <div class="checkout-promo__row">
+                <input
+                  class="mzk-input"
+                  placeholder="Например, МУР10"
+                  [ngModel]="promoInput()"
+                  (ngModelChange)="promoInput.set($event)"
+                  [ngModelOptions]="{ standalone: true }"
+                  (keyup.enter)="applyPromo()"
+                />
+                <button type="button" class="btn btn--ghost" (click)="applyPromo()">Применить</button>
+              </div>
+            }
+          </div>
+
+          <div class="card checkout-summary">
+            <h3>Ваш заказ</h3>
+            <ul class="checkout-summary__items">
+              @for (item of cartState.items; track item.productId) {
+                <li>
+                  <img [src]="item.imageUrl" [alt]="item.name" />
+                  <span class="checkout-summary__name">{{ item.name }}</span>
+                  <span class="checkout-summary__qty">{{ item.quantity }} шт.</span>
+                  <span class="checkout-summary__sum">{{ item.subtotal | rub }}</span>
+                </li>
+              }
+            </ul>
+            <dl class="checkout-summary__rows">
+              <div>
+                <dt>Товары, {{ cartState.itemsCount }} шт.</dt>
+                <dd>{{ totals().subtotal | rub }}</dd>
+              </div>
+              @if (totals().discount > 0) {
+                <div class="is-discount">
+                  <dt>Скидка</dt>
+                  <dd>−{{ totals().discount | rub }}</dd>
+                </div>
+              }
+              <div>
+                <dt>Доставка — {{ delivery().label.toLowerCase() }}</dt>
+                <dd>{{ totals().delivery | rub }}</dd>
+              </div>
+            </dl>
+            <div class="checkout-summary__total">
+              <span>Итого</span>
+              <strong>{{ totals().total | rub }}</strong>
+            </div>
+            @if (totals().discount > 0) {
+              <p class="checkout-summary__saving">Вы экономите {{ totals().discount | rub }} — кот одобрит!</p>
+            }
+            <button type="button" class="btn btn--primary btn--block" [disabled]="submitting()" (click)="submit()">
+              @if (submitting()) {
+                <i class="pi pi-spinner pi-spin"></i> Оформляем…
+              } @else {
+                Подтвердить заказ <i class="pi pi-arrow-right"></i>
+              }
+            </button>
+            <p class="checkout-summary__note">
+              Нажимая «Подтвердить заказ», вы соглашаетесь с условиями демо-магазина. Оплата имитируется.
+            </p>
+          </div>
+        </aside>
+      </div>
+    }
+  }
+</div>

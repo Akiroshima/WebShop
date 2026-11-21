@@ -1,0 +1,274 @@
+@use '../../../../styles/mixins' as m;
+
+:host {
+  display: block;
+  padding-bottom: 32px;
+}
+
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  align-items: start;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 96px 1fr auto auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  transition: opacity 0.15s ease;
+
+  &.is-busy {
+    opacity: 0.6;
+  }
+
+  &__media {
+    width: 96px;
+    height: 96px;
+    border-radius: 12px;
+    background: #f6f3e7;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      padding: 8px;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  &__brand {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mzk-muted);
+  }
+
+  &__name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--mzk-text);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--mzk-green);
+    }
+  }
+
+  &__stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--mzk-green);
+
+    i {
+      font-size: 12px;
+    }
+  }
+
+  &__qty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__unit {
+    font-size: 12px;
+    color: var(--mzk-muted);
+    white-space: nowrap;
+  }
+
+  &__sum {
+    min-width: 96px;
+    text-align: right;
+
+    strong {
+      font-size: 18px;
+    }
+  }
+
+  &__remove {
+    border: none;
+    background: none;
+    color: var(--mzk-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+
+    &:hover {
+      background: #f5e3de;
+      color: var(--mzk-danger);
+    }
+  }
+}
+
+.cart-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mzk-green);
+  text-decoration: none;
+  padding: 6px 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.cart-summary {
+  position: sticky;
+  top: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h2 {
+    font-size: 19px;
+  }
+
+  &__rows {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--mzk-muted-2);
+    }
+
+    dd {
+      margin: 0;
+      color: var(--mzk-text);
+      font-weight: 600;
+    }
+
+    .is-promo dd {
+      color: var(--mzk-orange);
+      font-weight: 800;
+    }
+  }
+
+  &__total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 14px;
+    border-top: 1px solid var(--mzk-border);
+    font-size: 15px;
+
+    strong {
+      font-size: 24px;
+    }
+  }
+
+  &__promo-hint {
+    margin: 0;
+    font-size: 13px;
+    color: var(--mzk-muted);
+    text-align: center;
+  }
+
+  &__banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--mzk-peach);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #8a4d1f;
+  }
+
+  &__banner-code {
+    background: var(--mzk-orange);
+    color: #fff;
+    border-radius: 8px;
+    padding: 3px 9px;
+    letter-spacing: 0.06em;
+    font-size: 12px;
+  }
+
+  &__secure {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--mzk-muted);
+
+    i {
+      color: var(--mzk-green-2);
+    }
+  }
+}
+
+@include m.mobile {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-item {
+    grid-template-columns: 72px 1fr auto;
+    grid-template-areas:
+      'media info info'
+      'media qty sum'
+      'media remove remove';
+    row-gap: 10px;
+
+    &__media {
+      width: 72px;
+      height: 72px;
+      grid-area: media;
+    }
+
+    &__info {
+      grid-area: info;
+    }
+
+    &__qty {
+      grid-area: qty;
+      align-items: flex-start;
+    }
+
+    &__sum {
+      grid-area: sum;
+      align-self: center;
+    }
+
+    &__remove {
+      grid-area: remove;
+      justify-self: end;
+    }
+  }
+}

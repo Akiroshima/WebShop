@@ -1,0 +1,85 @@
+<div class="info-bar">
+  <i class="pi pi-sparkles"></i>
+  Ваши контакты и адрес сохранены — подставим их при оформлении заказа.
+</div>
+
+<section class="card profile-card">
+  <h2>Контактные данные</h2>
+
+  @if (serverError()) {
+    <div class="profile-card__banner" role="alert">
+      <i class="pi pi-exclamation-circle"></i> {{ serverError() }}
+    </div>
+  }
+
+  <form class="profile-form" [formGroup]="form" (submit)="save()">
+    <label class="field">
+      <span class="field__label">Имя и фамилия</span>
+      <input
+        class="mzk-input"
+        formControlName="fullName"
+        placeholder="Анна Смирнова"
+        [class.is-invalid]="form.controls.fullName.touched && form.controls.fullName.invalid"
+      />
+      @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+        <span class="field__error">Укажите имя и фамилию</span>
+      }
+    </label>
+
+    <label class="field">
+      <span class="field__label">Электронная почта</span>
+      <input
+        class="mzk-input"
+        type="email"
+        formControlName="email"
+        placeholder="anna.smirnova@example.com"
+        [class.is-invalid]="form.controls.email.touched && form.controls.email.invalid"
+      />
+      <span class="field__hint">Используется для входа и восстановления доступа</span>
+      @if (fieldErrors()['email']; as messages) {
+        @for (message of messages; track message) {
+          <span class="field__error">{{ message }}</span>
+        }
+      } @else if (form.controls.email.touched && form.controls.email.invalid) {
+        <span class="field__error">Введите корректный email</span>
+      }
+    </label>
+
+    <label class="field">
+      <span class="field__label">Номер телефона</span>
+      <p-inputmask
+        styleClass="mzk-input"
+        formControlName="phone"
+        mask="+7 (999) 999-99-99"
+        placeholder="+7 (999) 123-45-67"
+        [class.is-invalid]="form.controls.phone.touched && form.controls.phone.invalid"
+      />
+      <span class="field__hint">Необязательно — но с ним проще восстановить доступ</span>
+      @if (fieldErrors()['phone']; as messages) {
+        @for (message of messages; track message) {
+          <span class="field__error">{{ message }}</span>
+        }
+      } @else if (form.controls.phone.touched && form.controls.phone.invalid) {
+        <span class="field__error">Введите корректный номер телефона</span>
+      }
+    </label>
+
+    <div class="profile-form__actions">
+      <button class="btn btn--primary" type="submit" [disabled]="saving()">
+        @if (saving()) {
+          <i class="pi pi-spinner pi-spin"></i> Сохраняем…
+        } @else {
+          Сохранить изменения
+        }
+      </button>
+    </div>
+  </form>
+</section>
+
+<div class="profile-pet card">
+  <span class="profile-pet__avatar">🐱</span>
+  <div>
+    <strong>Барсик · 4 года</strong>
+    <p>Демо-питомец. В этой версии раздел «Мои питомцы» ещё в разработке.</p>
+  </div>
+</div>

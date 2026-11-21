@@ -1,0 +1,57 @@
+@use '../../../../styles/mixins' as m;
+
+.success {
+  min-height: 72dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+  padding: 24px;
+
+  &__mark {
+    width: 84px;
+    height: 84px;
+    border-radius: 28px;
+    background: var(--mzk-green);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 36px;
+    box-shadow: 0 16px 40px rgba(61, 90, 60, 0.35);
+  }
+
+  &__overline {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: var(--mzk-orange);
+    margin-top: 8px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  p {
+    max-width: 480px;
+    margin: 0;
+    color: var(--mzk-muted-2);
+    line-height: 1.6;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@include m.mobile {
+  .success h1 {
+    font-size: 24px;
+  }
+}
