@@ -1,0 +1,256 @@
+<div class="mzk-container">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a routerLink="/catalog">Главная</a>
+    <i class="pi pi-angle-right"></i>
+    <span>Каталог</span>
+  </nav>
+
+  <div class="page-head">
+    <h1>Всё для вашего кота</h1>
+    @if (result(); as data) {
+      <span class="page-head__count">{{ data.total }} {{ data.total === 1 ? 'товар' : 'товаров' }}</span>
+    }
+  </div>
+
+  <a class="catalog-promo" routerLink="/cart">
+    <span class="catalog-promo__code">МУР10</span>
+    <span class="catalog-promo__text">Промокод на −10 % на первый заказ — примените его при оформлении</span>
+    <i class="pi pi-arrow-right"></i>
+  </a>
+
+  <div class="catalog-layout">
+    <aside class="catalog-aside" aria-label="Фильтры каталога">
+      <ng-container [ngTemplateOutlet]="filtersTpl" />
+    </aside>
+
+    <section class="catalog-content">
+      <div class="catalog-toolbar">
+        <button type="button" class="btn btn--ghost catalog-toolbar__filters" (click)="filtersOpen.set(true)">
+          <i class="pi pi-sliders-h"></i> Фильтры
+          @if (hasActiveFilters()) {
+            <span class="catalog-toolbar__dot"></span>
+          }
+        </button>
+
+        @if (hasActiveFilters()) {
+          <div class="catalog-chips">
+            @if (search(); as value) {
+              <button type="button" class="catalog-chip" (click)="removeChip('search')">
+                «{{ value }}» <i class="pi pi-times"></i>
+              </button>
+            }
+            @if (activeCategory(); as category) {
+              <button type="button" class="catalog-chip" (click)="removeChip('category')">
+                {{ category.name }} <i class="pi pi-times"></i>
+              </button>
+            }
+            @for (brandId of selectedBrands(); track brandId) {
+              @if (brandOf(brandId); as brand) {
+                <button type="button" class="catalog-chip" (click)="removeChip('brand', brandId)">
+                  {{ brand.name }} <i class="pi pi-times"></i>
+                </button>
+              }
+            }
+            @if (priceMin() || priceMax()) {
+              <button type="button" class="catalog-chip" (click)="removeChip('price')">
+                {{ priceMin() ? priceMin() + ' ₽' : '' }}{{ priceMin() && priceMax() ? ' – ' : '' }}{{ priceMax() ? priceMax() + ' ₽' : '' }}
+                <i class="pi pi-times"></i>
+              </button>
+            }
+            @if (onlyAvailable()) {
+              <button type="button" class="catalog-chip" (click)="removeChip('available')">
+                Только в наличии <i class="pi pi-times"></i>
+              </button>
+            }
+          </div>
+        }
+
+        <p-select
+          class="catalog-toolbar__sort"
+          [options]="sortOptions"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="sort()"
+          (ngModelChange)="setSort($event)"
+          [style]="{ width: '230px' }"
+          ariaLabel="Сортировка"
+        />
+      </div>
+
+      @if (loading()) {
+        <div class="catalog-grid">
+          @for (skeleton of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track skeleton) {
+            <div class="product-card is-skeleton"></div>
+          }
+        </div>
+      } @else if (result(); as data) {
+        @if (data.items.length === 0) {
+          <div class="empty-state card">
+            <span class="empty-state__icon"><i class="pi pi-search"></i></span>
+            <h2>Ничего не нашлось</h2>
+            <p>Кот прошёл мимо. Попробуйте изменить фильтры или сбросить их.</p>
+            <button type="button" class="btn btn--primary" (click)="resetFilters()">Сбросить фильтры</button>
+          </div>
+        } @else {
+          <div class="catalog-grid">
+            @for (product of data.items; track product.id) {
+              <article class="product-card" [class.is-out]="product.stock === 0">
+                <a class="product-card__media" [routerLink]="['/products', product.id]">
+                  <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+                </a>
+                <div class="product-card__body">
+                  <div class="product-card__meta">
+                    @if (product.brand; as brand) {
+                      <span class="product-card__brand">{{ brand }}</span>
+                    }
+                    <span class="product-card__rating"><i class="pi pi-star-fill"></i> {{ product.rating }}</span>
+                  </div>
+                  <a class="product-card__name" [routerLink]="['/products', product.id]">{{ product.name }}</a>
+                  <p class="product-card__desc">{{ product.description }}</p>
+                </div>
+                <div class="product-card__footer">
+                  <div class="product-card__price">
+                    <strong>{{ product.price | rub }}</strong>
+                    @if (product.stock > 0) {
+                      <span>В наличии: {{ product.stock }} шт.</span>
+                    } @else {
+                      <span class="is-out-text">Нет в наличии</span>
+                    }
+                  </div>
+                  @if (product.stock === 0) {
+                    <button type="button" class="btn btn--ghost btn--sm" disabled>Нет в наличии</button>
+                  } @else if (qtyOf(product.id) > 0) {
+                    <div class="qty-stepper">
+                      <button type="button" aria-label="Уменьшить" (click)="changeQty(product, -1)">
+                        <i class="pi pi-minus"></i>
+                      </button>
+                      <span>{{ qtyOf(product.id) }}</span>
+                      <button type="button" aria-label="Увеличить" (click)="changeQty(product, 1)">
+                        <i class="pi pi-plus"></i>
+                      </button>
+                    </div>
+                  } @else {
+                    <button type="button" class="btn btn--primary btn--sm" (click)="addToCart(product)">
+                      <i class="pi pi-plus"></i> В корзину
+                    </button>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+
+          <app-pager
+            [page]="page()"
+            [totalPages]="totalPages()"
+            [range]="shownRange()"
+            (pageChange)="setPage($event)"
+          />
+        }
+      }
+    </section>
+  </div>
+</div>
+
+<p-drawer [(visible)]="filtersOpen" position="left" [style]="{ width: '86vw', 'max-width': '360px' }">
+  <h3 class="catalog-drawer-title">Фильтры</h3>
+  <ng-container [ngTemplateOutlet]="filtersTpl" />
+  <button type="button" class="btn btn--primary btn--block catalog-apply" (click)="filtersOpen.set(false)">
+    Показать товары
+  </button>
+</p-drawer>
+
+<ng-template #filtersTpl>
+  <div class="catalog-filters">
+    <div class="catalog-filters__block">
+      <h3>Цена, ₽</h3>
+      <div class="catalog-filters__price">
+        <input
+          class="mzk-input"
+          type="number"
+          min="0"
+          placeholder="от"
+          aria-label="Цена от"
+          [ngModel]="priceFrom()"
+          (ngModelChange)="priceFrom.set($event)"
+          (keyup.enter)="applyPrice()"
+        />
+        <span>—</span>
+        <input
+          class="mzk-input"
+          type="number"
+          min="0"
+          placeholder="до"
+          aria-label="Цена до"
+          [ngModel]="priceTo()"
+          (ngModelChange)="priceTo.set($event)"
+          (keyup.enter)="applyPrice()"
+        />
+      </div>
+      <button type="button" class="btn btn--ghost btn--sm catalog-filters__apply-price" (click)="applyPrice()">
+        Применить
+      </button>
+    </div>
+
+    <div class="catalog-filters__block">
+      <h3>Наличие</h3>
+      <p-checkbox
+        [binary]="true"
+        [ngModel]="onlyAvailable()"
+        (ngModelChange)="setOnlyAvailable($event)"
+        inputId="only-available"
+        label="Только в наличии"
+      />
+    </div>
+
+    <div class="catalog-filters__block">
+      <h3>Категория</h3>
+      <button
+        type="button"
+        class="catalog-filters__option"
+        [class.is-selected]="category() === ''"
+        (click)="setCategory(null)"
+      >
+        Все категории
+        <span>{{ result()?.total ?? '' }}</span>
+      </button>
+      @for (item of categories(); track item.id) {
+        <button
+          type="button"
+          class="catalog-filters__option"
+          [class.is-selected]="category() === item.id"
+          (click)="setCategory(item.id)"
+        >
+          {{ item.name }}
+          <span>{{ item.count }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="catalog-filters__block">
+      <h3>Бренд</h3>
+      <div class="catalog-filters__brands">
+        @for (brand of visibleBrands(); track brand.id) {
+          <label class="catalog-filters__brand">
+            <p-checkbox
+              [binary]="true"
+              [ngModel]="selectedBrands().includes(brand.id)"
+              (ngModelChange)="toggleBrand(brand.id, $event)"
+              [inputId]="'brand-' + brand.id"
+            />
+            <span class="catalog-filters__brand-name">{{ brand.name }}</span>
+            <span class="catalog-filters__brand-count">{{ brand.count }}</span>
+          </label>
+        }
+      </div>
+      @if (brands().length > 6) {
+        <button type="button" class="catalog-filters__more" (click)="showAllBrands.set(!showAllBrands())">
+          {{ showAllBrands() ? 'Скрыть' : 'Показать все бренды' }} ({{ brands().length }})
+        </button>
+      }
+    </div>
+
+    <button type="button" class="btn btn--ghost btn--block" (click)="resetFilters()">
+      <i class="pi pi-replay"></i> Сбросить фильтры
+    </button>
+  </div>
+</ng-template>

@@ -1,0 +1,61 @@
+.security-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  h2 {
+    font-size: 19px;
+  }
+
+  &__note {
+    margin: -6px 0 0;
+    font-size: 13px;
+    color: var(--mzk-muted);
+  }
+
+  &__banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5e3de;
+    color: var(--mzk-danger);
+    border: 1px solid rgba(179, 85, 63, 0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+
+.security-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 440px;
+}
+
+.security-rules {
+  list-style: none;
+  margin: 0;
+  padding: 12px 14px;
+  background: var(--mzk-bg);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--mzk-muted-2);
+
+    &.is-passed {
+      color: var(--mzk-green);
+
+      i {
+        color: var(--mzk-green);
+      }
+    }
+  }
+}

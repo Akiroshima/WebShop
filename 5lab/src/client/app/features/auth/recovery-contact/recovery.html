@@ -1,0 +1,84 @@
+<app-auth-card
+  overline="ДОБРО ПОЖАЛОВАТЬ ОБРАТНО"
+  title="Восстановить доступ"
+  subtitle="Выберите способ: пришлём код на почту или по SMS. Код действует 10 минут."
+>
+  <div class="recovery-tabs" role="tablist">
+    <button
+      type="button"
+      role="tab"
+      [class.is-active]="channel() === 'email'"
+      [attr.aria-selected]="channel() === 'email'"
+      (click)="selectChannel('email')"
+    >
+      <i class="pi pi-envelope"></i> По почте
+    </button>
+    <button
+      type="button"
+      role="tab"
+      [class.is-active]="channel() === 'phone'"
+      [attr.aria-selected]="channel() === 'phone'"
+      (click)="selectChannel('phone')"
+    >
+      <i class="pi pi-mobile"></i> По телефону
+    </button>
+  </div>
+
+  <form class="recovery-form" (submit)="submit($event)">
+    @if (serverError()) {
+      <div class="recovery-form__banner" role="alert">
+        <i class="pi pi-exclamation-circle"></i>
+        <span>{{ serverError() }}</span>
+      </div>
+    }
+
+    @if (channel() === 'email') {
+      <label class="field">
+        <span class="field__label">Электронная почта</span>
+        <input
+          class="mzk-input"
+          type="email"
+          placeholder="anna.smirnova@example.com"
+          [formControl]="contactControl"
+          autocomplete="email"
+          [class.is-invalid]="contactControl.touched && invalid()"
+        />
+        <span class="field__hint">Например: anna.smirnova@example.com (аккаунт демо-покупателя)</span>
+        @if (contactControl.touched && invalid()) {
+          <span class="field__error">Введите корректный email</span>
+        }
+      </label>
+    } @else {
+      <label class="field">
+        <span class="field__label">Номер телефона</span>
+        <p-inputmask
+          styleClass="mzk-input"
+          mask="+7 (999) 999-99-99"
+          placeholder="+7 (999) 123-45-67"
+          [formControl]="contactControl"
+          autocomplete="tel"
+        />
+        <span class="field__hint">Телефон демо-покупателя: +7 (999) 123-45-67</span>
+        @if (contactControl.touched && invalid()) {
+          <span class="field__error">Введите корректный номер телефона</span>
+        }
+      </label>
+    }
+
+    <button class="btn btn--primary btn--block" type="submit" [disabled]="submitting() || invalid()">
+      @if (submitting()) {
+        <i class="pi pi-spinner pi-spin"></i> Отправляем…
+      } @else {
+        Отправить код <i class="pi pi-arrow-right"></i>
+      }
+    </button>
+
+    <p class="recovery-form__hint">
+      В демо-режиме код восстановления выводится в консоль браузера (F12 → Console).
+    </p>
+
+    <div class="recovery-form__aside">
+      Вспомнили пароль? <a routerLink="/login">Войти</a>
+    </div>
+  </form>
+</app-auth-card>

@@ -1,0 +1,21 @@
+<div class="mzk-container">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a routerLink="/catalog">Главная</a>
+    <i class="pi pi-angle-right"></i>
+    <span>Управление магазином</span>
+  </nav>
+
+  <div class="page-head">
+    <h1>Управление магазином</h1>
+  </div>
+
+  <nav class="admin-tabs" aria-label="Разделы управления">
+    @for (tab of tabs; track tab.path) {
+      <a [routerLink]="tab.path" routerLinkActive="is-active">
+        <i class="pi" [class]="tab.icon"></i> {{ tab.label }}
+      </a>
+    }
+  </nav>
+
+  <router-outlet />
+</div>

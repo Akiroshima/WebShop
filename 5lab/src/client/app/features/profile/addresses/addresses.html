@@ -1,0 +1,145 @@
+@if (loading()) {
+  <div class="card addr-skeleton"></div>
+} @else {
+  <div class="addr-list">
+    @for (address of addresses(); track address.id) {
+      <article class="card addr-card">
+        <div class="addr-card__head">
+          @if (address.isDefault) {
+            <span class="addr-card__badge">Основной</span>
+          }
+          @if (address.label; as label) {
+            <span class="addr-card__label">· {{ label }}</span>
+          }
+        </div>
+        <p class="addr-card__line">{{ addressLine(address) }}</p>
+        <p class="addr-card__who">Получатель: {{ address.recipient }} · {{ address.phone }}</p>
+        <div class="addr-card__actions">
+          @if (!address.isDefault) {
+            <button type="button" class="btn btn--ghost btn--sm" (click)="makeDefault(address)">
+              Сделать основным
+            </button>
+          }
+          <button type="button" class="btn btn--ghost btn--sm" (click)="openEdit(address)">
+            <i class="pi pi-pencil"></i> Редактировать
+          </button>
+          <button type="button" class="btn btn--danger btn--sm" (click)="askDelete(address)">
+            <i class="pi pi-trash"></i> Удалить
+          </button>
+        </div>
+      </article>
+    }
+
+    <button type="button" class="addr-add card" (click)="openCreate()">
+      <i class="pi pi-plus"></i>
+      <span>Добавить новый адрес</span>
+    </button>
+  </div>
+}
+
+<p-dialog
+  [(visible)]="dialogVisible"
+  [header]="editingId() ? 'Редактировать адрес' : 'Новый адрес'"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: 'min(94vw, 620px)' }"
+>
+  <div class="addr-form">
+    <div class="addr-form__row addr-form__row--2">
+      <label class="field">
+        <span class="field__label">Название (Дом, Работа…)</span>
+        <input class="mzk-input" type="text" placeholder="Дом" [ngModel]="form().label" (ngModelChange)="update('label', $event)" [ngModelOptions]="{ standalone: true }" />
+      </label>
+      <label class="field">
+        <span class="field__label">Получатель</span>
+        <input class="mzk-input" type="text" placeholder="Анна Смирнова" [ngModel]="form().recipient" (ngModelChange)="update('recipient', $event)" [ngModelOptions]="{ standalone: true }" [class.is-invalid]="errors()['recipient']" />
+        @if (errors()['recipient']; as messages) {
+          <span class="field__error">{{ messages[0] }}</span>
+        }
+      </label>
+    </div>
+
+    <label class="field">
+      <span class="field__label">Телефон</span>
+      <p-inputmask
+        styleClass="mzk-input"
+        mask="+7 (999) 999-99-99"
+        placeholder="+7 (999) 123-45-67"
+        [ngModel]="form().phone"
+        (ngModelChange)="update('phone', $event)"
+        [ngModelOptions]="{ standalone: true }"
+      />
+      @if (errors()['phone']; as messages) {
+        <span class="field__error">{{ messages[0] }}</span>
+      }
+    </label>
+
+    <div class="addr-form__row addr-form__row--2">
+      <label class="field">
+        <span class="field__label">Город</span>
+        <input class="mzk-input" type="text" placeholder="Москва" [ngModel]="form().city" (ngModelChange)="update('city', $event)" [ngModelOptions]="{ standalone: true }" [class.is-invalid]="errors()['city']" />
+        @if (errors()['city']; as messages) {
+          <span class="field__error">{{ messages[0] }}</span>
+        }
+      </label>
+      <label class="field">
+        <span class="field__label">Индекс</span>
+        <input class="mzk-input" type="text" placeholder="125047" [ngModel]="form().postalCode" (ngModelChange)="update('postalCode', $event)" [ngModelOptions]="{ standalone: true }" />
+      </label>
+    </div>
+
+    <div class="addr-form__row addr-form__row--3">
+      <label class="field">
+        <span class="field__label">Улица</span>
+        <input class="mzk-input" type="text" placeholder="ул. Лесная" [ngModel]="form().street" (ngModelChange)="update('street', $event)" [ngModelOptions]="{ standalone: true }" [class.is-invalid]="errors()['street']" />
+        @if (errors()['street']; as messages) {
+          <span class="field__error">{{ messages[0] }}</span>
+        }
+      </label>
+      <label class="field">
+        <span class="field__label">Дом</span>
+        <input class="mzk-input" type="text" placeholder="7" [ngModel]="form().house" (ngModelChange)="update('house', $event)" [ngModelOptions]="{ standalone: true }" [class.is-invalid]="errors()['house']" />
+        @if (errors()['house']; as messages) {
+          <span class="field__error">{{ messages[0] }}</span>
+        }
+      </label>
+      <label class="field">
+        <span class="field__label">Квартира</span>
+        <input class="mzk-input" type="text" placeholder="24" [ngModel]="form().apartment" (ngModelChange)="update('apartment', $event)" [ngModelOptions]="{ standalone: true }" />
+      </label>
+    </div>
+
+    <div class="addr-form__row addr-form__row--3">
+      <label class="field">
+        <span class="field__label">Подъезд</span>
+        <input class="mzk-input" type="text" placeholder="2" [ngModel]="form().entrance" (ngModelChange)="update('entrance', $event)" [ngModelOptions]="{ standalone: true }" />
+      </label>
+      <label class="field">
+        <span class="field__label">Этаж</span>
+        <input class="mzk-input" type="text" placeholder="5" [ngModel]="form().floor" (ngModelChange)="update('floor', $event)" [ngModelOptions]="{ standalone: true }" />
+      </label>
+      <label class="field">
+        <span class="field__label">Домофон</span>
+        <input class="mzk-input" type="text" placeholder="24" [ngModel]="form().intercom" (ngModelChange)="update('intercom', $event)" [ngModelOptions]="{ standalone: true }" />
+      </label>
+    </div>
+
+    <label class="addr-form__check">
+      <p-checkbox [binary]="true" [ngModel]="form().isDefault" (ngModelChange)="update('isDefault', $event)" [ngModelOptions]="{ standalone: true }" inputId="is-default" />
+      Использовать этот адрес по умолчанию
+    </label>
+  </div>
+
+  <ng-template #footer>
+    <div class="addr-form__footer">
+      <button type="button" class="btn btn--ghost" (click)="dialogVisible.set(false)">Отмена</button>
+      <button type="button" class="btn btn--primary" [disabled]="saving()" (click)="save()">
+        @if (saving()) {
+          <i class="pi pi-spinner pi-spin"></i> Сохраняем…
+        } @else {
+          Сохранить адрес
+        }
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>

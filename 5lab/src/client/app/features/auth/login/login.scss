@@ -1,0 +1,124 @@
+@use '../../../../styles/mixins' as m;
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+
+  &__banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f5e3de;
+    color: var(--mzk-danger);
+    border: 1px solid rgba(179, 85, 63, 0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+
+    i:first-child {
+      flex-shrink: 0;
+    }
+
+    span {
+      flex: 1;
+    }
+
+    button {
+      border: none;
+      background: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 2px;
+    }
+  }
+
+  &__password {
+    position: relative;
+    display: block;
+
+    input {
+      padding-right: 46px;
+      width: 100%;
+    }
+
+    button {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: none;
+      color: var(--mzk-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--mzk-bg);
+        color: var(--mzk-text);
+      }
+    }
+  }
+
+  &__aside {
+    display: flex;
+    justify-content: flex-end;
+
+    a {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--mzk-green);
+    }
+  }
+
+  &__demo {
+    margin-top: 4px;
+    background: var(--mzk-green-soft);
+    border: 1px dashed var(--mzk-green-2);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--mzk-green);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    code {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 12px;
+      width: fit-content;
+    }
+  }
+
+  &__demo-title {
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--mzk-muted-2);
+  }
+}
+
+.login-panel-extra {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.5;
+  }
+}
+
+@include m.mobile {
+  .login-form__banner {
+    flex-wrap: wrap;
+  }
+}

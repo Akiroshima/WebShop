@@ -1,0 +1,40 @@
+<div class="auth-card">
+  <aside class="auth-card__panel">
+    <div class="auth-card__logo">
+      <span class="auth-card__mark">
+        <svg viewBox="0 0 32 32" fill="none">
+          <path d="M6 14 L6 6 L12 10.5 M26 14 L26 6 L20 10.5" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="13" cy="17" r="1.8" fill="#fff"/>
+          <circle cx="19" cy="17" r="1.8" fill="#fff"/>
+          <path d="M14.5 21 Q16 22.4 17.5 21" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <strong>МУРКЕТ</strong>
+    </div>
+    <h2 class="auth-card__slogan">Снова вместе.<br />Снова мурчим.</h2>
+    <p class="auth-card__note">Зоомагазин для требовательных котов и их людей</p>
+    <div class="auth-card__cat" aria-hidden="true">
+      <svg viewBox="0 0 160 120" fill="none">
+        <ellipse cx="80" cy="104" rx="46" ry="10" fill="rgba(255,255,255,0.14)"/>
+        <path d="M80 96 C52 96 40 78 44 58 C47 43 60 34 80 34 C100 34 113 43 116 58 C120 78 108 96 80 96 Z" fill="#fbe8d3"/>
+        <path d="M52 46 L48 22 L68 34 M108 46 L112 22 L92 34" fill="#fbe8d3"/>
+        <path d="M52 46 L48 22 L68 34 M108 46 L112 22 L92 34" stroke="#fbe8d3" stroke-width="4" stroke-linejoin="round"/>
+        <circle cx="66" cy="60" r="4.5" fill="#3d5a3c"/>
+        <circle cx="94" cy="60" r="4.5" fill="#3d5a3c"/>
+        <path d="M74 70 Q80 76 86 70" stroke="#3d5a3c" stroke-width="3.4" stroke-linecap="round"/>
+        <path d="M56 68 L44 64 M56 73 L45 73 M104 68 L116 64 M104 73 L115 73" stroke="#e07b39" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <ng-content select="[panel]"></ng-content>
+  </aside>
+  <section class="auth-card__content">
+    @if (overline()) {
+      <span class="auth-card__overline">{{ overline() }}</span>
+    }
+    <h1 class="auth-card__title">{{ title() }}</h1>
+    @if (subtitle()) {
+      <p class="auth-card__subtitle">{{ subtitle() }}</p>
+    }
+    <ng-content></ng-content>
+  </section>
+</div>
