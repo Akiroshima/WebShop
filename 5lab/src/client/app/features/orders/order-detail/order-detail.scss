@@ -1,0 +1,155 @@
+@use '../../../../styles/mixins' as m;
+
+:host {
+  display: block;
+}
+
+.detail-skeleton {
+  height: 200px;
+  background: linear-gradient(100deg, #f6f4ee 40%, #efede4 50%, #f6f4ee 60%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.detail-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+
+  h1 {
+    font-size: 24px;
+  }
+
+  > span:not(.status-chip) {
+    color: var(--mzk-muted);
+  }
+}
+
+.detail-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detail-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h2 {
+    font-size: 17px;
+  }
+}
+
+.detail-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+
+  li {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 4px 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--mzk-border);
+    font-size: 14px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    a {
+      color: var(--mzk-text);
+      text-decoration: none;
+      font-weight: 700;
+
+      &:hover {
+        color: var(--mzk-green);
+      }
+    }
+  }
+
+  &__sku {
+    grid-column: 1;
+    font-size: 12px;
+    color: var(--mzk-muted);
+  }
+
+  &__qty {
+    color: var(--mzk-muted-2);
+    white-space: nowrap;
+  }
+
+  &__sum {
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}
+
+.detail-rows {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 14px;
+  }
+
+  dt {
+    color: var(--mzk-muted-2);
+    flex-shrink: 0;
+  }
+
+  dd {
+    margin: 0;
+    text-align: right;
+    color: var(--mzk-text);
+  }
+
+  .is-discount {
+    color: var(--mzk-orange);
+    font-weight: 800;
+  }
+
+  &__total {
+    padding-top: 10px;
+    border-top: 1px solid var(--mzk-border);
+
+    dd {
+      font-size: 18px;
+      font-weight: 800;
+    }
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@include m.mobile {
+  .detail-items li {
+    grid-template-columns: 1fr auto;
+
+    .detail-items__qty {
+      grid-column: 1;
+    }
+
+    .detail-items__sum {
+      grid-row: span 2;
+      align-self: center;
+    }
+  }
+}

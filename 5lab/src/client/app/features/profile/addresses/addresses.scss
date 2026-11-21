@@ -1,0 +1,136 @@
+@use '../../../../styles/mixins' as m;
+
+.addr-skeleton {
+  height: 140px;
+  background: linear-gradient(100deg, #f6f4ee 40%, #efede4 50%, #f6f4ee 60%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.addr-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.addr-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__badge {
+    background: var(--mzk-green-soft);
+    color: var(--mzk-green);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 4px 10px;
+  }
+
+  &__label {
+    color: var(--mzk-muted);
+    font-size: 13px;
+  }
+
+  &__line {
+    margin: 0;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  &__who {
+    margin: 0;
+    font-size: 13px;
+    color: var(--mzk-muted);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+}
+
+.addr-add {
+  border: 2px dashed var(--mzk-border-2);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 120px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  color: var(--mzk-green);
+  transition: border-color 0.15s ease, background 0.15s ease;
+
+  &:hover {
+    border-color: var(--mzk-green-2);
+    background: var(--mzk-green-soft);
+  }
+}
+
+.addr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &__row {
+    display: grid;
+    gap: 14px;
+
+    &--2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  &__check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--mzk-muted-2);
+    cursor: pointer;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@include m.mobile {
+  .addr-list {
+    grid-template-columns: 1fr;
+  }
+
+  .addr-form__row--2,
+  .addr-form__row--3 {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,35 @@
+<div class="mzk-container">
+  <nav class="breadcrumbs" aria-label="Хлебные крошки">
+    <a routerLink="/catalog">Главная</a>
+    <i class="pi pi-angle-right"></i>
+    <span>Личный кабинет</span>
+  </nav>
+
+  <div class="page-head">
+    <h1>Личный кабинет</h1>
+  </div>
+  <p class="account-greet">{{ auth.user()?.fullName }}, рады видеть вас и вашего кота.</p>
+
+  <div class="account-layout">
+    <aside class="account-side card">
+      <div class="account-side__user">
+        <span class="account-side__avatar">{{ initials() }}</span>
+        <span class="account-side__name">{{ auth.user()?.fullName }}</span>
+      </div>
+      <nav class="account-side__menu" aria-label="Разделы кабинета">
+        @for (item of menu; track item.path) {
+          <a [routerLink]="item.path" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: item.exact }">
+            <i class="pi" [class]="item.icon"></i> {{ item.label }}
+          </a>
+        }
+        <button type="button" class="account-side__logout" (click)="logout()">
+          <i class="pi pi-sign-out"></i> Выйти из аккаунта
+        </button>
+      </nav>
+    </aside>
+
+    <section class="account-content">
+      <router-outlet />
+    </section>
+  </div>
+</div>
